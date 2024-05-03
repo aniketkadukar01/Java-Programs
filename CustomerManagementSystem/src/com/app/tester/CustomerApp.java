@@ -9,6 +9,7 @@ import static com.app.utils.CustomerUtility.populatedCustomer;
 
 import com.app.custom_ordering.CustomerDobAndNameComparator;
 import com.app.customer.Customer;
+import com.app.utils.CustomerUtility;
 import com.app.utils.CustomerValidation;
 
 import static com.app.utils.CustomerValidation.validateInput;
@@ -23,8 +24,8 @@ public class CustomerApp {
 				while(!exit) {
 					System.out.println("Options :\n"+"0.Exit\n"+"1.Accept the Customer\n"+"2.Display the Customers\n"
 							+"3.SignIn\n"+"4.change password\n"+"5.Unsuscribed user\n"
-							+"6.Sorting of Customer using email\n"+"7.Sorting of customer on dob and lastname"
-							+"");
+							+"6.Sorting of Customer using email\n"+"7.Sorting of customer on dob and lastname\n"
+							+"8.Delete customer after a specified date");
 					System.out.println("Enter Choice");
 					try {
 						switch (sc.nextInt()) {
@@ -72,6 +73,10 @@ public class CustomerApp {
 							Collections.sort(customerlist,new CustomerDobAndNameComparator());
 							break;
 													
+						case 8://remove of customer after a specified date 
+							System.out.println("Enter the date in yyyy-mm-dd and Service plan");
+							CustomerUtility.removeUser(sc.next(),sc.next(),customerlist);
+							break;
 							
 						case 0:
 							System.out.println("MAIN OVER......");

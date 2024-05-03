@@ -33,6 +33,17 @@ public class Customer implements Comparable<Customer>{
 		this.email=email;
 	}
 	
+	
+	
+	
+	public ServicePlans getPlans() {
+		return plans;
+	}
+
+	public void setPlans(ServicePlans plans) {
+		this.plans = plans;
+	}
+
 	public String getLastname() {
 		return lastname;
 	}

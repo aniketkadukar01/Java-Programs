@@ -2,6 +2,7 @@ package com.app.utils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.app.customer.Customer;
@@ -32,4 +33,20 @@ public class CustomerUtility {
 		return customerlist;
 			
 	}
+	
+	
+	public static void removeUser(String dob,String serviceplans,List<Customer> customerlist) {
+		LocalDate date = LocalDate.parse(dob);
+		ServicePlans enteredplan = ServicePlans.valueOf(serviceplans.toUpperCase());
+		Iterator<Customer> itr = customerlist.iterator();
+		while(itr.hasNext()) {
+			Customer c= itr.next();
+			if (c.getPlans()== enteredplan && c.getDob().isAfter(date))
+				itr.remove();
+		}
+	}
+	
+	
+	
+	
 }

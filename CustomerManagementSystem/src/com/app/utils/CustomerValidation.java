@@ -1,6 +1,7 @@
 package com.app.utils;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +34,13 @@ public class CustomerValidation {
 	
 	//add a method to validate all inputs 
 	public static Customer validateInput(String firstname, String lastname, String email,
-			String password, double registrationammount, String dob, String plans, List<Customer> customerlist)
-			throws CustomerException {
+			String password, double registrationammount, String dob, String plans, 
+			List<Customer> customerlist)throws CustomerException {
 		checkForDup(email, customerlist);
+		checkPassword(password);
 		ServicePlans plan=checkForPlans(plans, registrationammount);
-		LocalDate birthdate=LocalDate.parse(dob);
+		//LocalDate birthdate=LocalDate.parse(dob);
+		LocalDate birthdate=checkAge(dob);
 		return new Customer( firstname, lastname, email, password, registrationammount, birthdate, plan);
 	}
 	
@@ -78,9 +81,24 @@ public class CustomerValidation {
 	}
 	
 
-	
+	//password validation 
+	public static void checkPassword(String password) throws CustomerException {
+		String regEx="((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[#@$*]).{5,20})";
+		if(!password.matches(regEx))
+			throw new CustomerException("not follow the Password rules");
+	}
 		
 	
+	//validate age <21
+	public static LocalDate checkAge(String dob) throws CustomerException {
+		System.out.println("Inside AGE Function ");
+		LocalDate date =LocalDate.parse(dob);
+		int age=Period.between(date, LocalDate.now()).getYears();
+		if(age<21)
+			throw new CustomerException("You ar not eligible your age is less ");
+		
+		return date;
+	}
 		
 		
 }
