@@ -2,10 +2,12 @@ package com.app.utility;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import com.app.customer_hashmap.Customer;
 import com.app.customer_hashmap.ServicePlans;
 import com.app.customerexception_hashmap.CustomerException;
+import com.app.customordering_hashmap.CustomerDobAndNameComparator;
 
 
 
@@ -55,22 +57,39 @@ public class CustomerValidation {
 		}
 		
 		//Search of customer on id (using Hash Map get method)
-		public static Customer searchByCustNo(int customerid,Map<Integer,Customer>customerlist) throws CustomerException {
-			Customer cust=customerlist.get(customerid);
-			if(cust==null)
-				throw new CustomerException("Customerid not found ");
-			
-			return cust;
+		public static Customer searchByCustNo(int customerid,Map<Integer,Customer> customerlist) throws CustomerException {
+
+			 Customer cus = customerlist.values()
+			.stream()
+			.filter(entry -> entry.getCustomerid() == customerid)
+			.findFirst()
+			.orElseThrow(() -> new CustomerException("Customer not found "));
+			 
+			 return cus;
+			 
 		}
 	
 		//remove customer (using Hash Map remove method)
 		public static String removeAcct(int customerid,Map<Integer,Customer> customerlist) throws CustomerException {
-			Customer cust=customerlist.remove(customerid);
-			if (cust==null)
-				throw new CustomerException("Id number is Invalid");
 			
-			return "Account Closed "+cust;
+			Customer customer = customerlist.values()
+			.stream()
+			.filter(entry -> entry.getCustomerid()==customerid)
+			.findFirst()
+			.map(entry -> {customerlist.remove(entry.getCustomerid()); return entry;})
+			.orElseThrow(() -> new CustomerException("Customer not found"));
+			
+			return "Account Closed "+customer;
 		}
 		
+		
+		public static void sortByCustomerID(Map<Integer,Customer> customerlist) {
+			
+			customerlist.values()
+			.stream()
+			.sorted()
+			.forEach(entry -> System.out.println(entry));
+			
+		}
 		
 }

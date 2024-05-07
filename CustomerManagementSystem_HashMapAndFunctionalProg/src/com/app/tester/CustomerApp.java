@@ -2,6 +2,7 @@ package com.app.tester;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
@@ -11,7 +12,7 @@ import com.app.customordering_hashmap.CustomerDobAndNameComparator;
 
 import static com.app.utility.CustomerValidation.*;
 
-import static com.app.utility.CustomerUtility.populatedCustomer;
+import static com.app.utility.CustomerUtility.*;
 
 public class CustomerApp {
 
@@ -19,11 +20,11 @@ public class CustomerApp {
 		try(Scanner sc=new Scanner(System.in)) {
 		
 			boolean exit = false;
-			Map<Integer,Customer> customerlist = populatedCustomer();
-			
+			List<Customer> custlist = populatedCustomer();
+			Map<Integer,Customer> customerlist =  populatedProductMap(custlist);
 			while(!exit) {
 				System.out.println("Options :\n"+"0.Exit\n"+"1.Accept the Customer\n"+"2.Display the Customers\n"
-						+"3.Search on customer number\n"+"4.Remove acoount\n"
+						+"3.Search on customer number\n"+"4.Remove account\n"
 						+"5.Display Customer Sort by customer id\n"+"6.Sort by dob and name\n");
 				System.out.println("Enter Choice");
 				try {
@@ -46,43 +47,32 @@ public class CustomerApp {
 						
 					case 2://Display the customer (using Hash Map values method)
 						System.out.println("All Customer details -");
-						
-						// cannot iterate Map (So For converting Map into Collection we are using values method)
-						//it returns values in Map
-//						for(Customer c : customerlist.values())
-//							System.out.println(c);
 						customerlist.forEach((k,v) -> System.out.println(v));
 						break;
 						
-					case 3://search by custno
+					case 3://search by customer no
 						System.out.println("Enter customer no");
-						Customer cust = searchByCustNo(sc.nextInt(),customerlist);
-						System.out.println(cust);
-						
-//						System.out.println();
-//						customerlist.forEach((k,v) -> System.out.println(customerlist.get(sc.nextInt())));
+						customer = searchByCustNo(sc.nextInt(),customerlist);
+						System.out.println(customer);
 						break;
 						
 					case 4://remove account on customer id
 						System.out.println("Enter customer no");
-//						System.out.println(removeAcct(sc.nextInt(),customerlist));
-						int cust1=sc.nextInt();
-						customerlist.values().removeIf(c -> c.getCustomerid()==cust1);
+						System.out.println(removeAcct(sc.nextInt(),customerlist));
 						break;
 						
 						
 					case 5://sorting of Map in ascending on customer id natural ordering (using Tree Map)
-						TreeMap<Integer,Customer> sortedlist=new TreeMap<>(customerlist);
-						//Map cannot iterable but Collection can so we use values method 
-						//values method covert map into collection view
-						for(Customer c : sortedlist.values())
-							System.out.println(c);
+//						TreeMap<Integer,Customer> sortedlist=new TreeMap<>(customerlist);
+						sortByCustomerID(customerlist);
+//						for(Customer c : sortedlist.values())
+//							System.out.println(c);
 						break;
 						
 					case 6://sort using dob and name (custom oredering)
-						ArrayList<Customer> custlist=new ArrayList<>(customerlist.values());
-						Collections.sort(custlist,new CustomerDobAndNameComparator());
-						for(Customer c: custlist)
+						ArrayList<Customer> custlist1=new ArrayList<>(customerlist.values());
+						Collections.sort(custlist1,new CustomerDobAndNameComparator());
+						for(Customer c: custlist1)
 							System.out.println(c);
 						break;
 						

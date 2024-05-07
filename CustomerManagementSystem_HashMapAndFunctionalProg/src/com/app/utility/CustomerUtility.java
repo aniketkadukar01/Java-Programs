@@ -1,7 +1,9 @@
 package com.app.utility;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.app.customer_hashmap.ServicePlans;
@@ -9,7 +11,7 @@ import com.app.customer_hashmap.Customer;
 
 public class CustomerUtility {
 
-	public static Map<Integer,Customer> populatedCustomer(){
+	public static List<Customer> populatedCustomer(){
 		
 		Customer a1=new Customer(18,"Virat", "kholi", "virat@gmail.com","virat", 1000, 
 				LocalDate.parse("2002-12-12"), ServicePlans.SILVER);
@@ -31,13 +33,22 @@ public class CustomerUtility {
 		
 		Customer[] customer = {a1,a2,a3,a4,a5,a6};
 		
-		Map<Integer,Customer> customerlist = new HashMap<>();
+		List<Customer> customerlist = new ArrayList<>();
+		
 		
 		for(Customer c : customer) {
-			System.out.println(customerlist.put(c.getCustomerid(), c));
+			System.out.println(customerlist.add(c));
 		}
 		
 		return customerlist;
+		
+	}
+	
+	public static Map<Integer,Customer> populatedProductMap(List<Customer> customerlist){
+		Map<Integer,Customer> cutomerMap =new HashMap<>();
+		
+		customerlist.forEach(c -> cutomerMap.put(c.getCustomerid(), c));
+		return cutomerMap;
 		
 	}
 	
