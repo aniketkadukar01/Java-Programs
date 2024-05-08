@@ -1,9 +1,11 @@
 package com.app.customer_hashmap;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 
-public class Customer {
+@SuppressWarnings("serial")
+public class Customer implements Serializable{
 	
 	private int customerid;
 	private String firstname,lastname,email,password;
