@@ -3,6 +3,9 @@ package com.app.utility;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
 
 import com.app.customer_hashmap.Customer;
 import com.app.customer_hashmap.ServicePlans;
@@ -20,7 +23,7 @@ public class CustomerValidation {
 		checkForDuplicate(customerid,customerlist);
 		emailVerification(email);
 		LocalDate birthDate = parseDate(dob);
-		ServicePlans plans1= checkPlans(plans,registrationammount);
+		ServicePlans plans1= checkPlans(plans,registrationammount,customerlist);
 		return new Customer( customerid,firstname, lastname, email, password
 				, registrationammount, birthDate, plans1);
 
@@ -35,12 +38,16 @@ public class CustomerValidation {
 	}
 
 	//validate email of customer (using regular expression)
-	public static String emailVerification(String email) throws CustomerException {
+	public static void emailVerification(String email) throws CustomerException {
+		
 		String regex="^(?=.*[a-z])(?=.*@gmail\\.com)[^A-Z]{2,32}$";
-		if(!email.matches(regex))
-			throw new CustomerException("Invalid Email");
-
-		return email;
+		
+		Pattern.compile(regex)
+		.matcher(email)
+		.results()
+		.findFirst()
+		.orElseThrow(() -> new CustomerException("Invalid email format: "));
+		
 	}
 
 	// add a static method for parsing string --> LocalDate
@@ -49,13 +56,16 @@ public class CustomerValidation {
 	}
 
 	// compare plans with the registration amount
-	public static ServicePlans checkPlans(String plans,double registrationammount) throws CustomerException {
+	public static ServicePlans checkPlans(String plans,double registrationammount,Map<Integer, Customer> customerlist) throws CustomerException {
 
-		ServicePlans planType=ServicePlans.valueOf(plans.toUpperCase());
-		if (planType.getPlans()==registrationammount)
-			return planType;
-
-		throw new CustomerException("Resgistration ammount does not match ");
+		 return customerlist.values()
+		.stream()
+		.filter(entry -> entry.getPlans().name().equalsIgnoreCase(plans))
+		.filter(entry -> entry.getRegistrationammount()==registrationammount)
+		.findFirst()
+		.map(entry -> entry.getPlans())
+		.orElseThrow(() -> new CustomerException("Resgistration ammount does not match "));
+		
 	}
 
 	//Search of customer on id (using Hash Map )
@@ -90,7 +100,7 @@ public class CustomerValidation {
 		if(customerlist.isEmpty())
 			throw new CustomerException("Map is empty");
 		
-		Comparator<Customer> customeridComparator = Comparator.comparing(Customer::getCustomerid);
+	Comparator<Customer> customeridComparator = Comparator.comparing(Customer::getCustomerid);
 
 		customerlist.values()
 		.stream()

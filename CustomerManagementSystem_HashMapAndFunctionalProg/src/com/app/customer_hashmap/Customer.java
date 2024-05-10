@@ -45,6 +45,14 @@ public class Customer implements Serializable{
 	public LocalDate getDob() {
 		return dob;
 	}
+
+	public ServicePlans getPlans() {
+		return plans;
+	}
+
+	public double getRegistrationammount() {
+		return registrationammount;
+	}
 	
 	
 	
